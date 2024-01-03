@@ -4,34 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator app</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header><h1>Calculator app</h1></header>
     <main>
       <section class="display">
-          <div class="output_display" data-name="outputDisplay"><h2>253</h2></div>
+          <div class="output_display"><p data-name="currentEquationDisplay">125+125</p><h2 data-name="outputDisplay">253</h2></div>
       </section>
       <section class="calculator_container">
           <button class="clear_all" type="button" data-name="clearAll">C</button>
           <button class="operator_btn" type="button" data-name="divisionBtn">&#247</button>
-          <button class="number_btn" data-name="btn7">7</button>
-          <button class="number_btn" data-name="btn8">8</button>
-          <button class="number_btn" data-name="btn9">9</button>
+          <button class="number_btn" data-name="numberBtn">7</button>
+          <button class="number_btn" data-name="numberBtn">8</button>
+          <button class="number_btn" data-name="numberBtn">9</button>
           <button class="operator_btn" data-name="multiplicationBtn">&#215</button>
-          <button class="number_btn" data-name="btn4">4</button>
-          <button class="number_btn" data-name="btn5">5</button>
-          <button class="number_btn" data-name="btn6">6</button>
+          <button class="number_btn" data-name="numberBtn">4</button>
+          <button class="number_btn" data-name="numberBtn">5</button>
+          <button class="number_btn" data-name="numberBtn">6</button>
           <button class="operator_btn" data-name="substractionBtn">&#8722</button>
-          <button class="number_btn" data-name="btn1">1</button>
-          <button class="number_btn" data-name="bt2">2</button>
-          <button class="number_btn" data-name="btn3">3</button>
+          <button class="number_btn" data-name="numberBtn">1</button>
+          <button class="number_btn" data-name="numberBtn">2</button>
+          <button class="number_btn" data-name="numberBtn">3</button>
           <button class="operator_btn" data-name="additionBtn">&#43</button>
-          <button class="number_btn grid-col-span2" data-name="btn0">0</button>
+          <button class="number_btn grid-col-span2" data-name="numberBtn">0</button>
           <button class="number_btn" data-name="separatorBtn">&#46</button>
           <button class="operator_btn" data-name="equalityBtn">&#61</button>
       </section>
 
     </main>
   </body>
+  <script src="main.js"></script>
 </html>

@@ -7,6 +7,11 @@
   --operator-bg-color: hsl(166, 44%, 63%);
   --clear-all-bg-color: hsl(166, 70%, 88%);
   --number-bg-color: hsl(165, 2%, 42%);
+  --font: "Roboto", sans-serif;
+}
+
+body {
+  font-family: var(--font);
 }
 
 button {
@@ -15,6 +20,7 @@ button {
   padding: 2rem;
   font-size: 2rem;
   border-radius: 15px;
+  font-family: var(--font);
 }
 
 button:hover {
@@ -23,21 +29,23 @@ button:hover {
 
 h1 {
   text-align: center;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+  font-size: 3rem;
 }
 
 main {
   margin: auto;
-  align-items: center;
-  justify-content: center;
-  max-width: 40vw;
+  max-width: 30vw;
   display: flex;
   flex-direction: column;
 }
 
 .output_display {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  text-align: right;
+  font-size: 1.5rem;
 }
 
 h2 {
@@ -45,6 +53,7 @@ h2 {
 }
 
 .calculator_container {
+  justify-content: center;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
