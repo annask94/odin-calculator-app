@@ -1,7 +1,5 @@
-let partialComputation = [];
-let numOne = [];
-let numTwo = [];
-let operator = [];
+let currentEquation = [];
+let currentNumber = [];
 let equationPair = [];
 
 // NUMBER PICK
@@ -11,55 +9,52 @@ const userInput = document.querySelectorAll('[data-name="numberBtn"]');
 userInput.forEach((button) => {
   button.addEventListener("click", () => {
     const userNumber = button.textContent;
-    equationConstruction(userNumber);
+    currentNumber.push(userNumber);
+    console.log("Current Number Array:", currentNumber);
   });
 });
-
-// USER NUMBER ARRAY ADDITION
-
-equationConstruction = (number) => {
-  if (operator.length === 0) {
-    numOne.push(number);
-  } else {
-    numTwo.push(number);
-  }
-};
 
 // OPERATOR
 
 const userOperatorInput = document.querySelectorAll(".operator_btn");
 
 userOperatorInput.forEach((button) => {
-  button.addEventListener("click", () => {
-    const userOperator = button.getAttribute("data-name");
-    switch (userOperator) {
-      case "divisionBtn":
-        operator.push("/");
-        break;
-      case "multiplicationBtn":
-        operator.push("*");
-        break;
-      case "substractionBtn":
-        operator.push("-");
-        break;
-      case "additionBtn":
-        operator.push("+");
-        break;
-    }
-  });
+  const userOperator = button.getAttribute("data-name");
+  button.addEventListener("click", () => equationConstruction(userOperator));
 });
+
+function equationConstruction(userOperator) {
+  let number = parseFloat(currentNumber.join(""));
+  currentEquation.push(number);
+  console.log("Current Equation Array:", currentEquation);
+
+  currentNumber = [];
+
+  switch (userOperator) {
+    case "divisionBtn":
+      currentEquation.push("/");
+      break;
+    case "multiplicationBtn":
+      currentEquation.push("*");
+      break;
+    case "substractionBtn":
+      currentEquation.push("-");
+      break;
+    case "additionBtn":
+      currentEquation.push("+");
+      break;
+  }
+}
 
 //CALCULATION
 
 const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
 
-equalityBtn.addEventListener("click", computePair);
+equalityBtn.addEventListener("click", computeEquation);
 
 //MERGE AND EQUATION
 
-function computePair() {
-  let numberOne = parseInt(numOne.join(""));
-  let numberTwo = parseInt(numTwo.join(""));
+function computeEquation() {
   let result;
 
   switch (operator) {
@@ -76,7 +71,4 @@ function computePair() {
       result = numberOne / numberTwo;
       break;
   }
-  partialComputation.push(result);
 }
-
-console.log(partialComputation);
