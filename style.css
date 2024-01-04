@@ -42,13 +42,15 @@ main {
 }
 
 .output_display {
-  margin-bottom: 2rem;
+  height: 5rem;
+  margin-bottom: 1rem;
   margin-left: auto;
   text-align: right;
   font-size: 1.5rem;
 }
 
 h2 {
+  margin-top: 1rem;
   text-align: right;
 }
 

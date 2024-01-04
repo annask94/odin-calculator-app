@@ -2,6 +2,30 @@ let currentEquation = [];
 let currentNumber = [];
 let equationPair = [];
 
+//DISPLAY
+
+const equationDisplay = document.querySelector(
+  "[data-name=currentEquationDisplay]"
+);
+const numberDisplay = document.querySelector('[data-name="outputDisplay"]');
+
+function updateDisplay() {
+  equationDisplay.textContent =
+    currentEquation.length > 0 ? currentEquation.join(" ") : "0";
+  numberDisplay.textContent =
+    currentNumber.length > 0 ? currentNumber.join("") : "0";
+}
+
+//CLEAR ALL
+
+const claerAll = document.querySelector('[data-name="clearAll"]');
+
+claerAll.addEventListener("click", () => {
+  currentEquation = [];
+  currentNumber = [];
+  updateDisplay();
+});
+
 // NUMBER PICK
 
 const userInput = document.querySelectorAll('[data-name="numberBtn"]');
@@ -11,7 +35,20 @@ userInput.forEach((button) => {
     const userNumber = button.textContent;
     currentNumber.push(userNumber);
     console.log("Current Number Array:", currentNumber);
+    updateDisplay();
   });
+});
+
+// COMA
+
+const comaSeparator = document.querySelector('[data-name="separatorBtn"]');
+
+comaSeparator.addEventListener("click", () => {
+  const separator = ".";
+  currentNumber.includes(separator)
+    ? (comaSeparator.disabled = true)
+    : currentNumber.push(separator);
+  updateDisplay();
 });
 
 // OPERATOR
@@ -44,6 +81,7 @@ function equationConstruction(userOperator) {
       currentEquation.push("+");
       break;
   }
+  updateDisplay();
 }
 
 //CALCULATION
