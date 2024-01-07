@@ -1,6 +1,7 @@
 let currentEquation = [];
 let currentNumber = [];
-let equationPair = [];
+let finalResult = 0;
+let finalResultDisplay = 0;
 
 //DISPLAY
 
@@ -9,11 +10,31 @@ const equationDisplay = document.querySelector(
 );
 const numberDisplay = document.querySelector('[data-name="outputDisplay"]');
 
-function updateDisplay() {
-  equationDisplay.textContent =
-    currentEquation.length > 0 ? currentEquation.join(" ") : "0";
+function updateEquationDisplay() {
+  let displayEquation = "";
+
+  if (currentEquation.length > 0) {
+    displayEquation += " " + currentEquation.join(" ");
+  }
+
+  if (currentNumber.length > 0) {
+    displayEquation += currentNumber.join("");
+  }
+
+  equationDisplay.textContent = displayEquation.trim() || "0";
+}
+
+function updateNumberDisplay() {
   numberDisplay.textContent =
     currentNumber.length > 0 ? currentNumber.join("") : "0";
+  if (finalResultDisplay !== undefined) {
+    numberDisplay.textContent = finalResultDisplay.toString();
+  }
+}
+
+function updateDisplay() {
+  updateEquationDisplay();
+  updateNumberDisplay();
 }
 
 //CLEAR ALL
@@ -23,6 +44,8 @@ const claerAll = document.querySelector('[data-name="clearAll"]');
 claerAll.addEventListener("click", () => {
   currentEquation = [];
   currentNumber = [];
+  finalResult = [];
+  finalResultDisplay = [];
   updateDisplay();
 });
 
@@ -35,6 +58,11 @@ userInput.forEach((button) => {
     const userNumber = button.textContent;
     currentNumber.push(userNumber);
     console.log("Current Number Array:", currentNumber);
+
+    if (finalResult !== 0) {
+      finalResult = 0;
+      currentEquation = [];
+    }
     updateDisplay();
   });
 });
@@ -60,10 +88,15 @@ userOperatorInput.forEach((button) => {
   button.addEventListener("click", () => equationConstruction(userOperator));
 });
 
+//EQUATION CONSTRUCTION
+
 function equationConstruction(userOperator) {
   let number = parseFloat(currentNumber.join(""));
-  currentEquation.push(number);
-  console.log("Current Equation Array:", currentEquation);
+
+  if (currentNumber.length > 0) {
+    currentEquation.push(number);
+    console.log("Current Equation Array:", currentEquation);
+  }
 
   currentNumber = [];
 
@@ -85,16 +118,10 @@ function equationConstruction(userOperator) {
 }
 
 //CALCULATION
+// Calculation on the base of the operator and equation pair from handleEquation function
 
-const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
-
-equalityBtn.addEventListener("click", computeEquation);
-
-//MERGE AND EQUATION
-
-function computeEquation() {
+function calculate(numberOne, operator, numberTwo) {
   let result;
-
   switch (operator) {
     case "+":
       result = numberOne + numberTwo;
@@ -109,4 +136,40 @@ function computeEquation() {
       result = numberOne / numberTwo;
       break;
   }
+
+  return result;
 }
+
+const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
+
+equalityBtn.addEventListener("click", () => {
+  function handleEquation() {
+    let finalResult;
+    const operators = ["*", "/", "+", "-"];
+
+    for (let i = 0; i < operators.length; i++) {
+      while (currentEquation.includes(operators[i])) {
+        const operatorIndex = currentEquation.findIndex(
+          (item) => item === operators[i]
+        );
+
+        const numberOne = parseFloat(currentEquation[operatorIndex - 1]);
+        const operator = currentEquation[operatorIndex];
+        const numberTwo = parseFloat(currentEquation[operatorIndex + 1]);
+
+        const result = calculate(numberOne, operator, numberTwo);
+        currentEquation.splice(operatorIndex - 1, 3, result);
+      }
+    }
+
+    finalResult = parseFloat(currentEquation[0]);
+    return finalResult;
+  }
+  finalResult = handleEquation();
+  finalResult.toString().includes(".")
+    ? (finalResultDisplay = finalResult.toFixed(2))
+    : (finalResultDisplay = finalResult);
+  currentEquation = [];
+  currentEquation.push(finalResult);
+  updateDisplay();
+});
