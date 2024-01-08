@@ -25,11 +25,11 @@ function updateEquationDisplay() {
 }
 
 function updateNumberDisplay() {
-  numberDisplay.textContent =
-    currentNumber.length > 0 ? currentNumber.join("") : "0";
-  if (finalResultDisplay !== undefined) {
+  if (currentNumber.length > 0) {
+    numberDisplay.textContent = currentNumber.join("");
+  } else if (finalResultDisplay !== undefined) {
     numberDisplay.textContent = finalResultDisplay.toString();
-  }
+  } else numberDisplay.textContent = "0";
 }
 
 function updateDisplay() {
@@ -44,8 +44,8 @@ const claerAll = document.querySelector('[data-name="clearAll"]');
 claerAll.addEventListener("click", () => {
   currentEquation = [];
   currentNumber = [];
-  finalResult = [];
-  finalResultDisplay = [];
+  finalResult = 0;
+  finalResultDisplay = 0;
   updateDisplay();
 });
 
@@ -83,38 +83,44 @@ comaSeparator.addEventListener("click", () => {
 
 const userOperatorInput = document.querySelectorAll(".operator_btn");
 
+const operatorMapping = {
+  divisionBtn: "/",
+  multiplicationBtn: "*",
+  substractionBtn: "-",
+  additionBtn: "+",
+};
+
 userOperatorInput.forEach((button) => {
-  const userOperator = button.getAttribute("data-name");
+  const userOperator = operatorMapping[button.getAttribute("data-name")];
   button.addEventListener("click", () => equationConstruction(userOperator));
 });
 
 //EQUATION CONSTRUCTION
 
 function equationConstruction(userOperator) {
-  let number = parseFloat(currentNumber.join(""));
-
   if (currentNumber.length > 0) {
+    let number = parseFloat(currentNumber.join(""));
     currentEquation.push(number);
+    updateDisplay();
     console.log("Current Equation Array:", currentEquation);
+    currentNumber = [];
   }
 
-  currentNumber = [];
+  const operator = userOperator;
 
-  switch (userOperator) {
-    case "divisionBtn":
-      currentEquation.push("/");
-      break;
-    case "multiplicationBtn":
-      currentEquation.push("*");
-      break;
-    case "substractionBtn":
-      currentEquation.push("-");
-      break;
-    case "additionBtn":
-      currentEquation.push("+");
-      break;
+  let lastArgument = currentEquation[currentEquation.length - 1];
+
+  console.log(lastArgument);
+
+  if (lastArgument === operator) {
+    return;
+  } else if (typeof lastArgument !== "string") {
+    currentEquation.push(operator);
+  } else if (typeof lastArgument === "string" && lastArgument !== operator) {
+    currentEquation[currentEquation.length - 1] = operator;
   }
-  updateDisplay();
+
+  updateEquationDisplay();
 }
 
 //CALCULATION
