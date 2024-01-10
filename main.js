@@ -119,6 +119,8 @@ function equationConstruction(userOperator) {
     } else if (operator === "-") {
       currentEquation.push(operator);
     }
+  } else if (currentEquation.length === 1 && currentEquation[0] === "-") {
+    return;
   }
 
   updateEquationDisplay();
