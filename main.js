@@ -56,13 +56,19 @@ const userInput = document.querySelectorAll('[data-name="numberBtn"]');
 userInput.forEach((button) => {
   button.addEventListener("click", () => {
     const userNumber = button.textContent;
-    currentNumber.push(userNumber);
-    console.log("Current Number Array:", currentNumber);
 
-    if (finalResult !== 0) {
-      finalResult = 0;
+    if (currentNumber[0] === "0" && userNumber === "0") {
+    } else if (currentNumber[0] === "0") {
+      currentNumber.splice(1, 0, ".");
+    } else if (
+      typeof currentEquation[0] === "number" &&
+      typeof currentEquation[currentEquation.length - 1] !== "string" &&
+      currentEquation.length > 0
+    ) {
       currentEquation = [];
     }
+    currentNumber.push(userNumber);
+
     updateDisplay();
   });
 });
@@ -98,26 +104,35 @@ userOperatorInput.forEach((button) => {
 //EQUATION CONSTRUCTION
 
 function equationConstruction(userOperator) {
+  const operator = userOperator;
+
   if (currentNumber.length > 0) {
     let number = parseFloat(currentNumber.join(""));
     currentEquation.push(number);
     updateDisplay();
-    console.log("Current Equation Array:", currentEquation);
     currentNumber = [];
   }
 
-  const operator = userOperator;
+  if (currentEquation.length === 0) {
+    if (["+", "*", "/"].includes(operator)) {
+      return;
+    } else if (operator === "-") {
+      currentEquation.push(operator);
+    }
+  }
+
+  updateEquationDisplay();
 
   let lastArgument = currentEquation[currentEquation.length - 1];
 
-  console.log(lastArgument);
+  //PREVENT STACKING MULTIPLE OPERATORS
 
   if (lastArgument === operator) {
     return;
-  } else if (typeof lastArgument !== "string") {
-    currentEquation.push(operator);
   } else if (typeof lastArgument === "string" && lastArgument !== operator) {
     currentEquation[currentEquation.length - 1] = operator;
+  } else if (typeof lastArgument !== "string") {
+    currentEquation.push(operator);
   }
 
   updateEquationDisplay();
@@ -150,6 +165,10 @@ const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
 
 equalityBtn.addEventListener("click", () => {
   function handleEquation() {
+    //NEGATIVE NUMBER WHEN FIRST ARGUMENT IS "-" AND ANY OTHER OPERATOR WONT BE FIRST ARGUMENT OF THE CURRENT EQUATION ARRY
+    if (currentEquation[0] === "-") {
+      currentEquation.splice(0, 2, -currentEquation[1]);
+    }
     let finalResult;
     const operators = ["*", "/", "+", "-"];
 
@@ -177,5 +196,6 @@ equalityBtn.addEventListener("click", () => {
     : (finalResultDisplay = finalResult);
   currentEquation = [];
   currentEquation.push(finalResult);
+
   updateDisplay();
 });
