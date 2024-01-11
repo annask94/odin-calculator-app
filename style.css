@@ -62,8 +62,12 @@ h2 {
 }
 
 .clear_all {
-  grid-column: span 3;
+  grid-column: span 2;
   background-color: var(--clear-all-bg-color);
+}
+
+.clear_last {
+  background-color: var(--operator-bg-color);
 }
 
 .grid-col-span2 {

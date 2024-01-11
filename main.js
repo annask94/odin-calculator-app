@@ -37,6 +37,19 @@ function updateDisplay() {
   updateNumberDisplay();
 }
 
+//CLEAR LAST ENTRY
+
+const clearLast = document.querySelector('[data-name="clearLast"]');
+
+clearLast.addEventListener("click", () => {
+  if (currentNumber.length > 0) {
+    currentNumber.pop();
+  } else if (currentEquation.length > 0) {
+    currentEquation.pop();
+  }
+  updateDisplay();
+});
+
 //CLEAR ALL
 
 const claerAll = document.querySelector('[data-name="clearAll"]');
@@ -49,29 +62,65 @@ claerAll.addEventListener("click", () => {
   updateDisplay();
 });
 
+//KEYBOARD COMPATIBILITY
+
+const operatorMapping = {
+  divisionBtn: "/",
+  multiplicationBtn: "*",
+  substractionBtn: "-",
+  additionBtn: "+",
+};
+
+// NUMBERS
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+  const numberKeys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  if (numberKeys.includes(key)) {
+    const userNumber = key;
+    handleNumberClick(userNumber);
+  }
+});
+
+// OPERATORS
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+  const operatorKeys = ["/", "*", "-", "+"];
+
+  if (operatorKeys.includes(key)) {
+    const userOperator = operatorMapping[key];
+    if (userOperator) {
+      equationConstruction(userOperator);
+    }
+  }
+});
+
 // NUMBER PICK
 
 const userInput = document.querySelectorAll('[data-name="numberBtn"]');
 
 userInput.forEach((button) => {
   button.addEventListener("click", () => {
-    const userNumber = button.textContent;
-
-    if (currentNumber[0] === "0" && userNumber === "0") {
-    } else if (currentNumber[0] === "0") {
-      currentNumber.splice(1, 0, ".");
-    } else if (
-      typeof currentEquation[0] === "number" &&
-      typeof currentEquation[currentEquation.length - 1] !== "string" &&
-      currentEquation.length > 0
-    ) {
-      currentEquation = [];
-    }
-    currentNumber.push(userNumber);
-
-    updateDisplay();
+    userNumber = button.textContent;
+    handleNumberClick(userNumber);
   });
 });
+
+function handleNumberClick(userNumber) {
+  if (currentNumber[0] === "0" && userNumber === "0") {
+  } else if (currentNumber[0] === "0") {
+    currentNumber.splice(1, 0, ".");
+  } else if (
+    typeof currentEquation[0] === "number" &&
+    typeof currentEquation[currentEquation.length - 1] !== "string" &&
+    currentEquation.length > 0
+  ) {
+    currentEquation = [];
+  }
+  currentNumber.push(userNumber);
+
+  updateDisplay();
+}
 
 // COMA
 
@@ -88,13 +137,6 @@ comaSeparator.addEventListener("click", () => {
 // OPERATOR
 
 const userOperatorInput = document.querySelectorAll(".operator_btn");
-
-const operatorMapping = {
-  divisionBtn: "/",
-  multiplicationBtn: "*",
-  substractionBtn: "-",
-  additionBtn: "+",
-};
 
 userOperatorInput.forEach((button) => {
   const userOperator = operatorMapping[button.getAttribute("data-name")];
@@ -167,7 +209,7 @@ const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
 
 equalityBtn.addEventListener("click", () => {
   function handleEquation() {
-    //NEGATIVE NUMBER WHEN FIRST ARGUMENT IS "-" AND ANY OTHER OPERATOR WONT BE FIRST ARGUMENT OF THE CURRENT EQUATION ARRY
+    //NEGATIVE NUMBER WHEN FIRST ARGUMENT IS "-" AND ANY OTHER OPERATOR WONT BE THE FIRST ARGUMENT OF THE CURRENT EQUATION ARRY
     if (currentEquation[0] === "-") {
       currentEquation.splice(0, 2, -currentEquation[1]);
     }
