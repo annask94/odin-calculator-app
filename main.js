@@ -64,13 +64,6 @@ claerAll.addEventListener("click", () => {
 
 //KEYBOARD COMPATIBILITY
 
-const operatorMapping = {
-  divisionBtn: "/",
-  multiplicationBtn: "*",
-  substractionBtn: "-",
-  additionBtn: "+",
-};
-
 // NUMBERS
 document.addEventListener("keydown", (event) => {
   const key = event.key;
@@ -83,17 +76,18 @@ document.addEventListener("keydown", (event) => {
 });
 
 // OPERATORS
+
 document.addEventListener("keydown", (event) => {
   const key = event.key;
   const operatorKeys = ["/", "*", "-", "+"];
 
   if (operatorKeys.includes(key)) {
-    const userOperator = operatorMapping[key];
-    if (userOperator) {
-      equationConstruction(userOperator);
-    }
+    const userOperator = key;
+    equationConstruction(userOperator);
   }
 });
+
+//CLICK EVENTS
 
 // NUMBER PICK
 
@@ -124,17 +118,41 @@ function handleNumberClick(userNumber) {
 
 // COMA
 
-const comaSeparator = document.querySelector('[data-name="separatorBtn"]');
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+  console.log("Key pressed:", key);
 
-comaSeparator.addEventListener("click", () => {
-  const separator = ".";
-  currentNumber.includes(separator)
-    ? (comaSeparator.disabled = true)
-    : currentNumber.push(separator);
-  updateDisplay();
+  if (key === ".") {
+    handleComaSeparator();
+  }
 });
 
+const comaSeparator = document.querySelector('[data-name="separatorBtn"]');
+
+comaSeparator.addEventListener("click", handleComaSeparator);
+
+function handleComaSeparator() {
+  const separator = ".";
+  if (
+    (currentNumber.length > 0 && currentNumber.includes(separator)) ||
+    (currentNumber.length > 0 && currentNumber[0] === "0")
+  ) {
+    comaSeparator.disabled = true;
+  } else {
+    currentNumber.push(separator);
+  }
+
+  updateDisplay();
+}
+
 // OPERATOR
+
+const operatorMapping = {
+  divisionBtn: "/",
+  multiplicationBtn: "*",
+  substractionBtn: "-",
+  additionBtn: "+",
+};
 
 const userOperatorInput = document.querySelectorAll(".operator_btn");
 
@@ -207,7 +225,19 @@ function calculate(numberOne, operator, numberTwo) {
 
 const equalityBtn = document.querySelector('[data-name="equalityBtn"]');
 
-equalityBtn.addEventListener("click", () => {
+equalityBtn.addEventListener("click", computeEquation);
+
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+  console.log("Target element:", event.target);
+
+  if (key === "Enter") {
+    event.preventDefault();
+    equalityBtn.click();
+  }
+});
+
+function computeEquation() {
   function handleEquation() {
     //NEGATIVE NUMBER WHEN FIRST ARGUMENT IS "-" AND ANY OTHER OPERATOR WONT BE THE FIRST ARGUMENT OF THE CURRENT EQUATION ARRY
     if (currentEquation[0] === "-") {
@@ -226,6 +256,8 @@ equalityBtn.addEventListener("click", () => {
         const operator = currentEquation[operatorIndex];
         const numberTwo = parseFloat(currentEquation[operatorIndex + 1]);
 
+        console.log("Debugging:", { numberOne, operator, numberTwo });
+
         const result = calculate(numberOne, operator, numberTwo);
         currentEquation.splice(operatorIndex - 1, 3, result);
       }
@@ -242,4 +274,4 @@ equalityBtn.addEventListener("click", () => {
   currentEquation.push(finalResult);
 
   updateDisplay();
-});
+}
